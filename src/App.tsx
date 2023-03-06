@@ -5,6 +5,9 @@ import Button from './components/Button/Button'
 import { PRIMARY, DANGER } from './components/Button/ButtonCategories'
 import Category from './components/Category/Category'
 import { ICategory } from './interfaces/ICategory'
+import Layout from './components/Layout/Layout'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home/Home'
 
 const App: FC = () => {
   const [categories, setCategories] = useState<any>([]) // ---> temp any
@@ -31,36 +34,47 @@ const App: FC = () => {
 
   return (
     <div className={styles.App}>
-      {!isLoading ? (
-        categories?.map(({ id, name }: ICategory) => (
-          <Category
-            id={id}
-            name={name}
-          />
-        ))
-      ) : (
-        <span>Loading...</span>
-      )}
-
-      {isButtonVisible && (
-        <Button
-          onClick={getAllCategoriesHandler}
-          category={PRIMARY}
-        >
-          Get All Categories
-        </Button>
-      )}
-
-      {!isButtonVisible && (
-        <Button
-          onClick={resetHandler}
-          category={DANGER}
-        >
-          Reset
-        </Button>
-      )}
+      <Routes>
+        <Route path='/' element={<Layout />}>
+          <Route path='/' element={<Home />} />
+        </Route>
+        <Route path='*' element={<Navigate to='/' replace />} />
+      </Routes>
     </div>
   )
+
+  // return (
+  //   <div className={styles.App}>
+  //     {!isLoading ? (
+  //       categories?.map(({ id, name }: ICategory) => (
+  //         <Category
+  //           id={id}
+  //           name={name}
+  //         />
+  //       ))
+  //     ) : (
+  //       <span>Loading...</span>
+  //     )}
+
+  //     {isButtonVisible && (
+  //       <Button
+  //         onClick={getAllCategoriesHandler}
+  //         category={PRIMARY}
+  //       >
+  //         Get All Categories
+  //       </Button>
+  //     )}
+
+  //     {!isButtonVisible && (
+  //       <Button
+  //         onClick={resetHandler}
+  //         category={DANGER}
+  //       >
+  //         Reset
+  //       </Button>
+  //     )}
+  //   </div>
+  // )
 }
 
 export default App

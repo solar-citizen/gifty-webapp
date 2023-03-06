@@ -6,9 +6,7 @@ type CategoryProps = {
 }
 
 const Category: FC<CategoryProps> = ({ id, name }) => {
-  console.log('Category Component')
-
-  return <div key={id}>{name}</div>
+  return <li key={id}>{name}</li>
 }
 
 export default Category
