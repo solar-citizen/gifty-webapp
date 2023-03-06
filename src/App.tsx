@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useState } from 'react'
+import CategoryAPI from './api/CategoryAPI'
+import styles from './App.module.scss'
+import Button from './components/Button/Button'
+import { PRIMARY, DANGER } from './components/Button/ButtonCategories'
+import Category from './components/Category/Category'
+import { ICategory } from './interfaces/ICategory'
 
-function App() {
+const App: FC = () => {
+  const [categories, setCategories] = useState<any>([]) // ---> temp any
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(true)
+
+  const getAllCategoriesHandler = async () => {
+    try {
+      setIsLoading(true)
+      const res = await CategoryAPI.getAll()
+      setCategories(res.data)
+    } catch (error) {
+      console.error(error) // ---> handle error later
+    } finally {
+      setIsLoading(false)
+      setIsButtonVisible(false)
+    }
+  }
+
+  const resetHandler = () => {
+    setIsButtonVisible(true)
+    setCategories([])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className={styles.App}>
+      {!isLoading ? (
+        categories?.map(({ id, name }: ICategory) => (
+          <Category
+            id={id}
+            name={name}
+          />
+        ))
+      ) : (
+        <span>Loading...</span>
+      )}
+
+      {isButtonVisible && (
+        <Button
+          onClick={getAllCategoriesHandler}
+          category={PRIMARY}
         >
-          Learn React
-        </a>
-      </header>
+          Get All Categories
+        </Button>
+      )}
+
+      {!isButtonVisible && (
+        <Button
+          onClick={resetHandler}
+          category={DANGER}
+        >
+          Reset
+        </Button>
+      )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
