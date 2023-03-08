@@ -1,12 +1,12 @@
 export type ICategory = {
-  id: number
-  name: string
-}
+  id: number; // ----> id?: number
+  name: string;
+};
 
 export type ICategoryResponse = {
-  categories: ICategory[]
-}
+  categories: ICategory[];
+};
 
 export type ICategoryCreateRequest = {
-  name: string
-}
+  name: string;
+};
