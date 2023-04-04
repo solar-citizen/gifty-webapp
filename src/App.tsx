@@ -1,80 +1,21 @@
-import { FC, useState } from 'react'
-import CategoryAPI from './api/CategoryAPI'
-import styles from './App.module.scss'
-import Button from './components/Button/Button'
-import { PRIMARY, DANGER } from './components/Button/ButtonCategories'
-import Category from './components/Category/Category'
-import { ICategory } from './interfaces/ICategory'
-import Layout from './components/Layout/Layout'
+import { FC } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Home from './pages/Home/Home'
+import { Layout } from './components'
+import { Home, Administration } from './pages'
+import styles from './App.module.scss'
 
 const App: FC = () => {
-  const [categories, setCategories] = useState<any>([]) // ---> temp any
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(true)
-
-  const getAllCategoriesHandler = async () => {
-    try {
-      setIsLoading(true)
-      const res = await CategoryAPI.getAll()
-      setCategories(res.data)
-    } catch (error) {
-      console.error(error) // ---> handle error later
-    } finally {
-      setIsLoading(false)
-      setIsButtonVisible(false)
-    }
-  }
-
-  const resetHandler = () => {
-    setIsButtonVisible(true)
-    setCategories([])
-  }
-
   return (
     <div className={styles.App}>
       <Routes>
-        <Route path='/' element={<Layout />}>
+        <Route path='/' element={<Layout.WithNav />}>
           <Route path='/' element={<Home />} />
+          <Route path='/admin' element={<Administration />} />
         </Route>
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </div>
   )
-
-  // return (
-  //   <div className={styles.App}>
-  //     {!isLoading ? (
-  //       categories?.map(({ id, name }: ICategory) => (
-  //         <Category
-  //           id={id}
-  //           name={name}
-  //         />
-  //       ))
-  //     ) : (
-  //       <span>Loading...</span>
-  //     )}
-
-  //     {isButtonVisible && (
-  //       <Button
-  //         onClick={getAllCategoriesHandler}
-  //         category={PRIMARY}
-  //       >
-  //         Get All Categories
-  //       </Button>
-  //     )}
-
-  //     {!isButtonVisible && (
-  //       <Button
-  //         onClick={resetHandler}
-  //         category={DANGER}
-  //       >
-  //         Reset
-  //       </Button>
-  //     )}
-  //   </div>
-  // )
 }
 
 export default App

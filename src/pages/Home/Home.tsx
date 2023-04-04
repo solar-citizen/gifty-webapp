@@ -1,49 +1,30 @@
-import React, { FC, useState } from "react";
-import CategoryAPI from "../../api/CategoryAPI";
-import Category from "../../components/Category/Category";
-import { ICategory } from "../../interfaces/ICategory";
-import { Button } from "react-bootstrap";
+import React, { FC } from 'react'
+import Card from 'react-bootstrap/Card'
+import styles from './Home.module.scss'
 
 const Home: FC = () => {
-  const [categories, setCategories] = useState<any>([]); // ---> temp any
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(true);
-
-  const getAllCategoriesHandler = async () => {
-    try {
-      setIsLoading(true);
-      const res = await CategoryAPI.getAll();
-      setCategories(res.data);
-    } catch (error) {
-      console.error(error); // ---> handle error later
-    } finally {
-      setIsLoading(false);
-      setIsButtonVisible(false);
-    }
-  };
-
-  const resetHandler = () => {
-    setIsButtonVisible(true);
-    setCategories([]);
-  };
+  const numbers = Array.from({ length: 30 }, (_, i) => i + 1)
 
   return (
-    <div>
-      {!isLoading ? (
-        categories?.map(({ id, name }: ICategory) => (
-          <Category id={id} name={name} />
-        ))
-      ) : (
-        <span>Loading...</span>
-      )}
+    <main>
+      <span>This is Home Page</span>
+      <div className={styles.Cards}>
+        {numbers.map(n => {
+          return (
+            <Card border='dark' style={{ width: '18rem' }} key={n}>
+              <Card.Header>Header</Card.Header>
+              <Card.Body>
+                <Card.Title>Dark Card {n}</Card.Title>
+                <Card.Text>
+                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          )
+        })}
+      </div>
+    </main>
+  )
+}
 
-      {isButtonVisible && (
-        <Button onClick={getAllCategoriesHandler}>Get All Categories</Button>
-      )}
-
-      {!isButtonVisible && <Button onClick={resetHandler}>Reset</Button>}
-    </div>
-  );
-};
-
-export default Home;
+export default Home
