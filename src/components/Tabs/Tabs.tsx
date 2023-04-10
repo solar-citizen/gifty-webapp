@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Categories, Discounts, Maintenance, Tab } from '../index'
 import styles from './Tabs.module.scss'
 

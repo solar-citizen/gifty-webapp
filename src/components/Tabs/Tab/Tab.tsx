@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, ReactNode, isValidElement, Children } from 'react'
 import Button from 'react-bootstrap/Button'
 import styles from './Tab.module.scss'
 
 type TabProps = {
-  children: React.ReactNode
+  children: ReactNode
   active: number
 }
 
 type TabDataProps = {
   tab: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const Tab = ({ children, active }: TabProps) => {
@@ -19,8 +19,8 @@ const Tab = ({ children, active }: TabProps) => {
   useEffect(() => {
     let data: TabDataProps[] = []
 
-    React.Children.forEach(children, (element: React.ReactNode) => {
-      if (!React.isValidElement(element)) return
+    Children.forEach(children, (element: ReactNode) => {
+      if (!isValidElement(element)) return
 
       const {
         props: { tab, children },

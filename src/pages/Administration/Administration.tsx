@@ -1,10 +1,10 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Tabs } from '../../components'
 
 const Administration: FC = () => {
   return (
     <div>
-      This is Administration Page
+      <h1 className='d-flex'>Administration</h1>
       <Tabs />
     </div>
   )
