@@ -1,31 +1,38 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { ICategory } from '../../interfaces/ICategory'
-import { useGetCategoriesQuery } from '../../api/apiSlice'
-import Card from 'react-bootstrap/Card'
+import { useGetCategoriesQuery } from '../../store/categorySlice'
+import CustomCard from '../CustomCard/CustomCard'
+import Button from 'react-bootstrap/Button'
+import { AddCategoryForm } from '../index'
 import styles from '../../pages/Home/Home.module.scss'
+import stylesCat from './Categories.module.scss'
 
 const Categories: FC = () => {
   const { data: categories, isLoading, isSuccess, isError, error } = useGetCategoriesQuery()
 
+  const [isFormVisible, setIsFormVisible] = useState<boolean>(false)
+
+  const toggleFormVisible = () => {
+    setIsFormVisible((prevState: boolean) => !prevState)
+  }
+
   return (
-    <>
+    <div className={stylesCat.Categories}>
+      <AddCategoryForm isVisible={isFormVisible} />
+      <div className='align-self-end'>
+        <Button variant='success' onClick={toggleFormVisible}>
+          + Add Category
+        </Button>
+      </div>
       {isLoading && <span>Loading...</span>}
-      {isSuccess &&
-        categories?.map(({ id, name }: ICategory) => (
-          <div className={styles.Cards} key={id}>
-            <Card border='dark' style={{ width: '18rem' }}>
-              <Card.Header>Header</Card.Header>
-              <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      {isError && error && <span>error</span>}
-    </>
+      <div className={styles.CardsContainer}>
+        {isSuccess &&
+          categories?.map(({ id, name, description }: ICategory) => (
+            <CustomCard key={id} id={id} name={name} description={description} />
+          ))}
+      </div>
+      {isError && error && <span>Error while loading categories.</span>}
+    </div>
   )
 }
 

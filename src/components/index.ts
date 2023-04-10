@@ -5,5 +5,7 @@ import Maintenance from './Maintenance/Maintenance'
 import Discounts from './Discounts/Discounts'
 import Tabs from './Tabs/Tabs'
 import Tab from './Tabs/Tab/Tab'
+import CustomCard from './CustomCard/CustomCard'
+import AddCategoryForm from './AddCategoryForm/AddCategoryForm'
 
-export { Layout, Navigation, Categories, Maintenance, Discounts, Tab, Tabs }
+export { Layout, Navigation, Categories, Maintenance, Discounts, Tab, Tabs, CustomCard, AddCategoryForm }
