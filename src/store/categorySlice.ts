@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BASE_URL } from '../utils/constants'
 import { ICategory } from '../interfaces/ICategory'
-import { FormDataProps } from '../components/AddCategoryForm/AddCategoryForm'
 
 export const categorySlice = createApi({
   reducerPath: 'categoryApi',
@@ -13,7 +12,7 @@ export const categorySlice = createApi({
     getCategory: builder.query<ICategory, number>({
       query: id => `/categories/${id}`,
     }),
-    addCategory: builder.mutation<ICategory, FormDataProps>({
+    addCategory: builder.mutation<ICategory, ICategory>({
       query: category => ({
         url: '/categories/add',
         method: 'POST',
@@ -22,7 +21,6 @@ export const categorySlice = createApi({
       async onQueryStarted(category, { dispatch, queryFulfilled }) {
         const addResult = dispatch(
           categorySlice.util.updateQueryData('getCategories', undefined, categories => {
-            //@ts-expect-error
             categories.push(category)
           }),
         )
