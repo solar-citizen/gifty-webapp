@@ -1,30 +1,38 @@
 import { FC } from 'react'
 import { Button } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { useAddCategoryMutation } from '../../store/categorySlice'
+import { useAddCategoryMutation, useUpdateCategoryMutation } from '../../store/categorySlice'
 import { ICategory } from '../../interfaces/ICategory'
 
 type AddCategoryFormProps = {
   isVisible: boolean
+  toggleVisible: VoidFunction
+  isUpdate?: boolean
+  categoryData?: ICategory
 }
-
-const AddCategoryForm: FC<AddCategoryFormProps> = ({ isVisible }) => {
+// ToDo: RENAME
+const AddCategoryForm: FC<AddCategoryFormProps> = ({ isVisible, toggleVisible, categoryData, isUpdate }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<ICategory>({
-    defaultValues: {
-      name: '',
-      description: '',
-    },
+    defaultValues: isUpdate ? categoryData : { name: '', description: '' },
   })
+
   const [addCategory] = useAddCategoryMutation()
+  const [updateCategory] = useUpdateCategoryMutation()
 
   const onSubmit = handleSubmit((data: ICategory) => {
-    addCategory(data)
-    reset()
+    if (!isUpdate) {
+      addCategory(data)
+      reset()
+    }
+    if (isUpdate && categoryData) {
+      updateCategory(data)
+      toggleVisible()
+    }
   })
 
   return (

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import Card from 'react-bootstrap/Card'
 import { useNavigate } from 'react-router-dom'
 
-type CustomCardProps = {
+export interface CustomCardProps {
   id?: number
   name: string
   description?: string

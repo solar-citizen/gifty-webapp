@@ -5,9 +5,11 @@ import { ICategory } from '../interfaces/ICategory'
 export const categorySlice = createApi({
   reducerPath: 'categoryApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  tagTypes: ['Categories'],
   endpoints: builder => ({
     getCategories: builder.query<ICategory[], void>({
       query: () => '/categories/all',
+      providesTags: ['Categories'],
     }),
     getCategory: builder.query<ICategory, number>({
       query: id => `/categories/${id}`,
@@ -32,19 +34,44 @@ export const categorySlice = createApi({
         }
       },
     }),
-    updateCategory: builder.mutation({
+    updateCategory: builder.mutation<ICategory, ICategory>({
       query: category => ({
-        url: `/categories/${category.id}`,
+        url: `/categories/edit`,
         method: 'PATCH',
         body: category,
       }),
+      async onQueryStarted(category, { dispatch, queryFulfilled }) {
+        const updateResult = dispatch(
+          categorySlice.util.updateQueryData('getCategories', undefined, categories => {
+            const index = categories.findIndex(c => c.id === category.id)
+            categories[index] = category
+          }),
+        )
+
+        try {
+          await queryFulfilled
+        } catch {
+          updateResult.undo()
+        }
+      },
+      // invalidatesTags: ['Categories'],
     }),
-    deleteCategory: builder.mutation({
-      query: ({ id }) => ({
-        url: `/categories/${id}`,
+    deleteCategory: builder.mutation<void, number>({
+      query: id => ({
+        url: `/categories/${id}/remove`,
         method: 'DELETE',
-        body: id,
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const deleteResult = dispatch(
+          categorySlice.util.updateQueryData('getCategories', undefined, categories => categories.filter(c => c.id !== id)),
+        )
+
+        try {
+          await queryFulfilled
+        } catch {
+          deleteResult.undo()
+        }
+      },
     }),
   }),
 })

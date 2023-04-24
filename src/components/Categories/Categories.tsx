@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import { ICategory } from '../../interfaces/ICategory'
 import { useGetCategoriesQuery } from '../../store/categorySlice'
-import CustomCard from '../CustomCard/CustomCard'
+import { CustomCategory } from '../index'
 import Button from 'react-bootstrap/Button'
 import { AddCategoryForm } from '../index'
 import styles from '../../pages/Home/Home.module.scss'
@@ -18,7 +18,7 @@ const Categories: FC = () => {
 
   return (
     <div className={stylesCat.Categories}>
-      <AddCategoryForm isVisible={isFormVisible} />
+      <AddCategoryForm isVisible={isFormVisible} toggleVisible={toggleFormVisible} />
       <div className='align-self-end'>
         <Button variant='success' onClick={toggleFormVisible}>
           + Add Category
@@ -28,7 +28,7 @@ const Categories: FC = () => {
       <div className={styles.CardsContainer}>
         {isSuccess &&
           categories?.map(({ id, name, description }: ICategory) => (
-            <CustomCard key={id} id={id} name={name} description={description} />
+            <CustomCategory key={`${id}-${name}`} id={id} name={name} description={description} isAdmin={true} />
           ))}
       </div>
       {isError && error && <span>Error while loading categories.</span>}
