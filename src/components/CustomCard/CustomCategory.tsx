@@ -4,12 +4,14 @@ import { useDeleteCategoryMutation } from '../../store/categorySlice'
 import CustomCard, { CustomCardProps } from './CustomCard'
 import { AddCategoryForm } from '../index'
 import { ICategory } from '../../interfaces/ICategory'
+import { CategoriesLocations } from '../Categories/CategoriesLocations'
 
 interface CustomCategoryProps extends CustomCardProps {
-  isAdmin: boolean
+  location: CategoriesLocations
+  onCardChecked?: (id?: number) => void
 }
 
-const CustomCategory: FC<CustomCategoryProps> = ({ id, name, description, isAdmin }) => {
+const CustomCategory: FC<CustomCategoryProps> = ({ id, name, description, location, onCardChecked }) => {
   const [isFormVisible, setIsFormVisible] = useState<boolean>(false)
 
   const [deleteCategory] = useDeleteCategoryMutation()
@@ -19,11 +21,13 @@ const CustomCategory: FC<CustomCategoryProps> = ({ id, name, description, isAdmi
     deleteCategory(Number(id))
   }
 
-  console.log(id)
+  const renderOptions = () => {
+    if (location === CategoriesLocations.HOME) {
+      return
+    }
 
-  return (
-    <div className='d-flex flex-column'>
-      {isAdmin && (
+    if (location === CategoriesLocations.ADMINISTRATION) {
+      return (
         <>
           <AddCategoryForm
             isVisible={isFormVisible}
@@ -40,8 +44,14 @@ const CustomCategory: FC<CustomCategoryProps> = ({ id, name, description, isAdmi
             </Button>
           </div>
         </>
-      )}
-      <CustomCard key={id} id={id} name={name} description={description} />
+      )
+    }
+  }
+
+  return (
+    <div className='d-flex flex-column'>
+      {renderOptions()}
+      <CustomCard key={id} id={id} name={name} description={description} location={location} onCardChecked={onCardChecked} />
     </div>
   )
 }

@@ -5,11 +5,9 @@ import { ICategory } from '../interfaces/ICategory'
 export const categorySlice = createApi({
   reducerPath: 'categoryApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-  tagTypes: ['Categories'],
   endpoints: builder => ({
     getCategories: builder.query<ICategory[], void>({
       query: () => '/categories/all',
-      providesTags: ['Categories'],
     }),
     getCategory: builder.query<ICategory, number>({
       query: id => `/categories/${id}`,
@@ -54,7 +52,6 @@ export const categorySlice = createApi({
           updateResult.undo()
         }
       },
-      // invalidatesTags: ['Categories'],
     }),
     deleteCategory: builder.mutation<void, number>({
       query: id => ({

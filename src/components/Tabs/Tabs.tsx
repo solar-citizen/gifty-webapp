@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { CategoriesLocations } from '../Categories/CategoriesLocations'
 import { Categories, Discounts, Maintenance, Tab } from '../index'
 import styles from './Tabs.module.scss'
 
@@ -6,7 +7,7 @@ const Tabs: FC = () => {
   const tabContent = [
     {
       title: 'Categories',
-      content: <Categories />,
+      content: <Categories location={CategoriesLocations.ADMINISTRATION} />,
     },
     {
       title: 'Discounts',
